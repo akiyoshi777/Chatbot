@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+</head>
+<body>
+    <div>
+        <textarea id="chatbox" readonly></textarea>
+        <input type="text" id="user_input">
+        <button onclick="sendMessage()">送信</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            let userMessage = document.getElementById('user_input').value;
+            document.getElementById('chatbox').value += "あなた: " + userMessage + "\n";
+            document.getElementById('user_input').value = '';
+
+            fetch('/ask', {
+                method: 'POST',
+                body: new URLSearchParams({'user_message': userMessage}),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('chatbox').value += "ChatGPT: " + data.bot_reply + "\n";
+            });
+        }
+    </script>
+</body>
+</html>
